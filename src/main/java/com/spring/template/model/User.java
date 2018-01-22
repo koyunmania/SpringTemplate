@@ -23,9 +23,12 @@ public class User {
 	@Column(name = "user_id")
 	private int user_id;
 	
-	@NotEmpty(message = "Username can not be empty!")
 	@Column(name = "username")
 	private String username;
+	
+	@NotEmpty(message = "Email can not be empty!")
+	@Column(name = "email")
+	private String email;
 	
 	@NotEmpty(message = "Password can not be empty!")
 	@Column(name = "password")
