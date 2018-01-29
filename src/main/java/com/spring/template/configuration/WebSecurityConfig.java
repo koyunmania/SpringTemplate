@@ -42,7 +42,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		.dataSource(dataSource)
 		.passwordEncoder(bCryptPasswordEncoder)
 		.usersByUsernameQuery("select username,password,enabled from user_profile where username=?")
-		.authoritiesByUsernameQuery("SELECT username, role_name FROM user_role \n" + 
+		.authoritiesByUsernameQuery("SELECT username, role FROM user_role \n" + 
 				"INNER JOIN user_profile ON user_profile.user_id = user_role.user_id\n" + 
 				"INNER JOIN role ON role.role_id = user_role.role_id WHERE user_profile.username=?");    	
     }

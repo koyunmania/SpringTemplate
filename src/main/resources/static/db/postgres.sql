@@ -11,7 +11,7 @@ CREATE TABLE user_profile
 CREATE TABLE role
 (
   role_id serial NOT NULL,
-  role_name character varying(20) NOT NULL,
+  role character varying(20) NOT NULL,
   CONSTRAINT role_pkey PRIMARY KEY (role_id)
 );
 
@@ -31,8 +31,8 @@ CREATE TABLE user_role
 INSERT INTO user_profile(username,password,enabled,email) VALUES ('jack','jack', true,'j@j.com');
 INSERT INTO user_profile(username,password,enabled,email) VALUES ('peter','peter', true,'p@p.com');
  
-INSERT INTO role (role_name) VALUES ('ROLE_USER');
-INSERT INTO role (role_name) VALUES ('ROLE_ADMIN');
+INSERT INTO role (role) VALUES ('ROLE_USER');
+INSERT INTO role (role) VALUES ('ROLE_ADMIN');
 
 INSERT INTO user_role (user_id, role_id) VALUES (1, 1);
 INSERT INTO user_role (user_id, role_id) VALUES (1, 2);
