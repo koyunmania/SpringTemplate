@@ -1,10 +1,10 @@
 CREATE TABLE user_profile
 (
   user_id serial NOT NULL,
-  username character varying(20),
-  password character varying(20) NOT NULL,
+  username character varying(20) NOT NULL,
+  password character varying(100) NOT NULL,
   enabled boolean NOT NULL DEFAULT false,
-  email character varying(30) NOT NULL,
+  email character varying(30),
   CONSTRAINT user_profile_pkey PRIMARY KEY (user_id)
 );
 

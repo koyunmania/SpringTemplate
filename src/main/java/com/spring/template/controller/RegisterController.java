@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.validation.BindingResult;
 
 import com.spring.template.model.User;
 import com.spring.template.service.UserService;
@@ -23,10 +24,19 @@ public class RegisterController {
 	}
 
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
-	public ModelAndView register(@Valid User user) {
+	public ModelAndView register(@Valid User user, BindingResult bindingResult) {
 		ModelAndView modelAndView = new ModelAndView();
-		userService.saveUser(user);
-		modelAndView.addObject("username", user.getUsername());
+		User userExisting = userService.findUserByEmail(user.getEmail()); 
+		if(userExisting != null) {
+			bindingResult.rejectValue("email", "error.user", "Email exists in the DB!");
+		} 
+		if(bindingResult.hasErrors())
+		{
+			modelAndView.setViewName("register");
+		} else {
+			userService.saveUser(user);
+			modelAndView.addObject("username", user.getUsername());
+		}
 		return modelAndView; 
 	}
 }

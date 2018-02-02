@@ -6,6 +6,7 @@ import java.util.HashSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -30,13 +31,13 @@ public class UserServiceImpl implements UserService {
     
     @Override
 	public User findUserByEmail(String email) {
-		User user = null; 
+		User result = null; 
 		try {
-			user =  userRepository.findByEmail(email);
-		} catch (Exception e) {
-			logger.error("__ERROR: UserServiceImpl - User can not be found in the database!", e);
+			result =  userRepository.findByEmail(email);
+		} catch (DataAccessException e) {
+			logger.error("__ERROR: UserServiceImpl.findUserByEmail(String email): ", e);
 		}
-		return user;
+		return result;
 	}
 
 	@Override
@@ -46,6 +47,27 @@ public class UserServiceImpl implements UserService {
 		Role userRole = roleRepository.findByRole("ROLE_USER");
 		user.setRoles(new HashSet<Role>(Arrays.asList(userRole)));
 		userRepository.save(user);
+	}
+
+	@Override
+	public void deleteUser(User user) {
+		try {
+			userRepository.delete(user);
+		} catch (DataAccessException e) {
+			logger.error("__ERROR: UserServiceImpl.deleteUser(User user): ", e);
+		}
+		
+	}
+	
+	@Override
+	public User findUserByUsername(String username) {
+		User result = null;
+		try {
+			result = userRepository.findByUsername(username);
+		} catch (Exception e) {
+			logger.error("__ERROR: UserServiceImpl.findByUsername(String username): ", e);
+		}
+		return result;
 	}
 	
 }

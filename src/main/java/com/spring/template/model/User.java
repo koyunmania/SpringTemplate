@@ -13,6 +13,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
+import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
@@ -24,10 +25,11 @@ public class User {
 	private int user_id;
 	
 	@Column(name = "username")
+	@NotEmpty(message = "Email can not be empty!")
 	private String username;
 	
-	@NotEmpty(message = "Email can not be empty!")
 	@Column(name = "email")
+	@Email(message = "Please provide a vaid Email!")
 	private String email;
 	
 	@NotEmpty(message = "Password can not be empty!")
