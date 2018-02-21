@@ -11,8 +11,11 @@
             <div><label> Password: <input type="password" name="password"/> </label></div>
             <div><input type="submit" value="Sign In"/></div>
         </form>
-        <div th:if="${username}">
-			Congrats <span th:utext="${username}"></span> you are registered!
+        <div th:if="${registerable}">
+			<span th:utext="${message}"></span>
+        </div>
+        <div th:if="!${registerable}">
+			<span th:utext="${message}"></span>
         </div>
     </body>
 </html>

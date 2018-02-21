@@ -3,9 +3,11 @@ package com.spring.template.api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.spring.template.model.User;
@@ -19,7 +21,7 @@ public class UserServiceRestController {
 	@Autowired
 	private UserService userService;
 	
-	@RequestMapping(value = "/delete", method = RequestMethod.GET)
+	@RequestMapping(value = "/userapi/delete", method = RequestMethod.GET)
 	public void deleteUser(@RequestParam(value = "username") String username) {
 		try {
 			User user = userService.findUserByUsername(username);
@@ -33,4 +35,12 @@ public class UserServiceRestController {
 		} 
 		
 	}
+
+	@RequestMapping(value = "/userapi/post", method = RequestMethod.GET)
+	public User getUser() {
+		System.out.println("XXXXXXXX");
+		User user = userService.findUserByUsername("a@a.com");
+		return user;
+	}
+
 }

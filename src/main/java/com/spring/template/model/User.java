@@ -15,6 +15,7 @@ import javax.persistence.Table;
 
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.hibernate.validator.constraints.Length;
 
 @Entity
 @Table(name = "user_profile")
@@ -25,11 +26,13 @@ public class User {
 	private int user_id;
 	
 	@Column(name = "username")
-	@NotEmpty(message = "Email can not be empty!")
+	@Length(min=5, max=30)
+	@NotEmpty(message = "error.username.notnull")
+	@Email(message = "error.username.format")
 	private String username;
 	
 	@Column(name = "email")
-	@Email(message = "Please provide a vaid Email!")
+	@Email
 	private String email;
 	
 	@NotEmpty(message = "Password can not be empty!")
