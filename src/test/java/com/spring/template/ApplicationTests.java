@@ -27,11 +27,11 @@ public class ApplicationTests {
     @Test
     public void loginWithValidUserThenAuthenticated() throws Exception {
         FormLoginRequestBuilder login = formLogin()
-            .user("user")
-            .password("password");
+            .user("a@a.com")
+            .password("a");
 
         mockMvc.perform(login)
-            .andExpect(authenticated().withUsername("user"));
+            .andExpect(authenticated().withUsername("a@a.com"));
     }
 
     @Test
