@@ -36,7 +36,7 @@ public class UserServiceRestController {
 		
 	}
 
-	@RequestMapping(value = "/userapi/get", method = RequestMethod.GET)
+	@RequestMapping(value = "/userapi/post", method = RequestMethod.POST)
 	public User getUser() {
 		User user = userService.findUserByUsername("a@a.com");
 		return user;

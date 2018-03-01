@@ -3,11 +3,14 @@ package com.spring.template.controller;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.validation.Valid;
+
 import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
@@ -37,20 +40,28 @@ public class RegisterController {
 	}
 
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
-	public ModelAndView register(User user) throws ConstraintViolationException {
+	public ModelAndView register(@Valid User user, BindingResult result) throws ConstraintViolationException {
 		ModelAndView modelAndView = new ModelAndView();
 		Validator validator = validateRegistration(user);
-		if(validator.getValid()) {
+		if(result.hasFieldErrors("username")) {
+			modelAndView.addObject("message", "Username not valid!");
+			modelAndView.addObject("registerable", false);
+		} else if(result.hasFieldErrors("password")) { 
+			modelAndView.addObject("message", "Password not valid!");
+			modelAndView.addObject("registerable", false);
+		} else if(!validator.getValid()){
+			modelAndView.addObject("message", "Email existing!");
+			modelAndView.addObject("registerable", false);
+		} else {
 			user.setEmail(user.getUsername());
-			String roleUser = RoleName.User.getRole();
+			RoleName roleUser = RoleName.User;
 			Set<Role> roles= new HashSet<Role>();
 			roles.add(roleService.findRoleByName(roleUser));
 			user.setRoles(roles);
 			userService.saveUser(user);
-		} else {
+			modelAndView.addObject("message", validator.getValidationString());
+			modelAndView.addObject("registerable", validator.getValid());
 		}
-		modelAndView.addObject("message", validator.getValidationString());
-		modelAndView.addObject("registerable", validator.getValid());
 		return modelAndView; 
 	}
 	

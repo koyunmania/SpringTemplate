@@ -3,6 +3,7 @@ package com.spring.template.service;
 import java.util.Arrays;
 import java.util.HashSet;
 
+import org.hibernate.validator.constraints.Email;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +31,7 @@ public class UserServiceImpl implements UserService {
     private BCryptPasswordEncoder bCryptPasswordEncoder;
     
     @Override
-	public User findUserByEmail(String email) {
+	public User findUserByEmail(@Email String email) {
 		User result = null; 
 		try {
 			result =  userRepository.findByEmail(email);
@@ -60,7 +61,7 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	@Override
-	public User findUserByUsername(String username) {
+	public User findUserByUsername(@Email String username) {
 		User result = null;
 		try {
 			result = userRepository.findByUsername(username);
