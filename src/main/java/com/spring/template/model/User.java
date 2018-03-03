@@ -38,7 +38,7 @@ public class User {
 	
 	@NotEmpty(message = "Password can not be empty!")
 	@Column(name = "password")
-	@Min(2)
+	@Length(min = 2)
 	private String password;
 	
 	@Column(name = "enabled")

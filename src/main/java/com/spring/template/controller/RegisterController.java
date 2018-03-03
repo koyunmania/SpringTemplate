@@ -18,9 +18,10 @@ import org.springframework.web.servlet.ModelAndView;
 import com.spring.template.model.Role;
 import com.spring.template.model.RoleName;
 import com.spring.template.model.User;
-import com.spring.template.errorhandling.exceptions.Validator;
+import com.spring.template.errorhandling.validator.ValidatorResult;
 import com.spring.template.service.RoleService;
 import com.spring.template.service.UserService;
+import com.spring.template.errorhandling.validator.Validator;
 
 @Controller
 public class RegisterController {
@@ -42,16 +43,17 @@ public class RegisterController {
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
 	public ModelAndView register(@Valid User user, BindingResult result) throws ConstraintViolationException {
 		ModelAndView modelAndView = new ModelAndView();
-		Validator validator = validateRegistration(user);
+		ValidatorResult validationResult = Validator.validate(user);
+
 		if(result.hasFieldErrors("username")) {
 			modelAndView.addObject("message", "Username not valid!");
 			modelAndView.addObject("registerable", false);
 		} else if(result.hasFieldErrors("password")) { 
 			modelAndView.addObject("message", "Password not valid!");
 			modelAndView.addObject("registerable", false);
-		} else if(!validator.getValid()){
-			modelAndView.addObject("message", "Email existing!");
-			modelAndView.addObject("registerable", false);
+		} else if(!validationResult.isValid()){
+			modelAndView.addObject("message", validationResult.getValidationText());
+			modelAndView.addObject("registerable", validationResult.isValid());
 		} else {
 			user.setEmail(user.getUsername());
 			RoleName roleUser = RoleName.User;
@@ -59,25 +61,9 @@ public class RegisterController {
 			roles.add(roleService.findRoleByName(roleUser));
 			user.setRoles(roles);
 			userService.saveUser(user);
-			modelAndView.addObject("message", validator.getValidationString());
-			modelAndView.addObject("registerable", validator.getValid());
+			modelAndView.addObject("message", validationResult.getValidationText());
+			modelAndView.addObject("registerable", validationResult.isValid());
 		}
 		return modelAndView; 
-	}
-	
-	public Validator validateRegistration(User user) {
-		Validator validator = new Validator();
-		User userExisting = new User();
-		userExisting = userService.findUserByUsername(user.getUsername());
-		 
-		if(userExisting != null) {
-			logger.warn("__WARN: RegisterController.register(User user): User already exists!");
-			validator.setValidationString("REGISTRATION ERROR: User " + user.getUsername() + "already exists!");
-			validator.setValid(false);
-		} else {
-			validator.setValidationString("Congrats " + user.getUsername() + " you are registered!");
-			validator.setValid(true);
-		}
-		return validator;
 	}
 }

@@ -31,7 +31,7 @@ public class UserServiceImpl implements UserService {
     private BCryptPasswordEncoder bCryptPasswordEncoder;
     
     @Override
-	public User findUserByEmail(@Email String email) {
+	public User findUserByEmail(String email) {
 		User result = null; 
 		try {
 			result =  userRepository.findByEmail(email);
@@ -61,7 +61,7 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	@Override
-	public User findUserByUsername(@Email String username) {
+	public User findUserByUsername(String username) {
 		User result = null;
 		try {
 			result = userRepository.findByUsername(username);
