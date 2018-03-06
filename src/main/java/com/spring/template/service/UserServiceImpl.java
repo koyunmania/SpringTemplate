@@ -3,7 +3,6 @@ package com.spring.template.service;
 import java.util.Arrays;
 import java.util.HashSet;
 
-import org.hibernate.validator.constraints.Email;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +11,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.spring.template.model.Role;
+import com.spring.template.model.RoleName;
 import com.spring.template.model.User;
 import com.spring.template.repository.RoleRepository;
 import com.spring.template.repository.UserRepository;
@@ -36,7 +36,7 @@ public class UserServiceImpl implements UserService {
 		try {
 			result =  userRepository.findByEmail(email);
 		} catch (DataAccessException e) {
-			logger.error("__ERROR: UserServiceImpl.findUserByEmail(String email): ", e);
+			logger.error("__ERROR: UserServiceImpl.findUserByEmail(String email): User (mail: " + email + ") can't be found in DB.", e);
 		}
 		return result;
 	}
@@ -45,9 +45,13 @@ public class UserServiceImpl implements UserService {
 	public void saveUser(User user) {
 		user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
 		user.setEnabled(true);
-		Role userRole = roleRepository.findByRole("ROLE_USER");
+		Role userRole = roleRepository.findByRole(RoleName.User.getRole());
 		user.setRoles(new HashSet<Role>(Arrays.asList(userRole)));
-		userRepository.save(user);
+		try {
+			userRepository.save(user);
+		} catch (Exception e) {
+			logger.error("__ERROR: UserServiceImpl.saveUser(User user): User (user: " + user.toString() + ") can't be saved.", e);
+		}
 	}
 
 	@Override
@@ -55,9 +59,8 @@ public class UserServiceImpl implements UserService {
 		try {
 			userRepository.delete(user);
 		} catch (DataAccessException e) {
-			logger.error("__ERROR: UserServiceImpl.deleteUser(User user): ", e);
+			logger.error("__ERROR: UserServiceImpl.deleteUser(User user): User (user: " + user.toString() + ") can't be deleted.\"", e);
 		}
-		
 	}
 	
 	@Override
@@ -66,7 +69,7 @@ public class UserServiceImpl implements UserService {
 		try {
 			result = userRepository.findByUsername(username);
 		} catch (Exception e) {
-			logger.error("__ERROR: UserServiceImpl.findByUsername(String username): ", e);
+			logger.error("__ERROR: UserServiceImpl.findByUsername(String username): User (username: " + username + ") can't be saved.\"", e);
 		}
 		return result;
 	}

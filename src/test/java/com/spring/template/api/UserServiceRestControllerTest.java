@@ -1,6 +1,6 @@
 package com.spring.template.api;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+	import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -32,15 +32,47 @@ public class UserServiceRestControllerTest {
     private UserService userService;
 	
 	@Test
-	public void testGetUser() throws Exception {
-		User user = new User();
-		user.setUsername("a@a.com");
-		given(userService.findUserByUsername("a@a.com")).willReturn(user);
-		mvc.perform(post("/userapi/post")
-			//.with(user("a@a.com").password("a"))
-			.contentType(MediaType.APPLICATION_JSON))
-			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.username", is("a@a.com")));
+	public void testGetUser() throws Exception  {
+		User foundUser = new User();
+		String mockUsername = "a@a.com";
+		foundUser.setUsername(mockUsername);
+		given(userService.findUserByUsername(mockUsername)).willReturn(foundUser);
+		mvc.perform(
+				get("/userapi/getuser")
+				//.with(user("a@a.com").password("a"))
+				.param("username", mockUsername)
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON))
+		.andExpect(status().isOk())
+		.andExpect(jsonPath("$.username", is("a@a.com")));
+	}
+	
+	@Test
+	public void testDeleteUser() throws Exception {
+		User foundUser = new User();
+		String mockUsername = "a@a.com";
+		foundUser.setUsername(mockUsername);
+		mvc.perform(
+				delete("/userapi/deleteuser")
+				.param("username", mockUsername)
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON))
+		.andExpect(status().isOk());
 	}
 
+	@Test
+	public void testSaveUser() throws Exception {
+		User foundUser = new User();
+		String mockUsername = "a@a.com";
+		String mockPassword = "123";
+		foundUser.setUsername(mockUsername);
+		foundUser.setPassword(mockPassword);
+		mvc.perform(
+				post("/userapi/saveuser")
+				//.param("username", mockUsername)
+				.content("{ \"username\":" + mockUsername + ", \"password\": " + mockPassword + "}")
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON))
+		.andExpect(status().isOk());
+	}
 }
