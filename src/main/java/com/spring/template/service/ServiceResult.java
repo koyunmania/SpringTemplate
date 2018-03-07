@@ -1,6 +1,6 @@
-package com.spring.template.api;
+package com.spring.template.service;
 
-public class RestResult {
+public class ServiceResult {
 	private boolean status;
 	private String message;
 	private Object data;

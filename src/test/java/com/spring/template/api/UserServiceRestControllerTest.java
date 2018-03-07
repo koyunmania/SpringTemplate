@@ -1,6 +1,6 @@
 package com.spring.template.api;
 
-	import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -17,6 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.mockito.BDDMockito.given;
 
 import com.spring.template.model.User;
+import com.spring.template.service.ServiceResult;
 import com.spring.template.service.UserService;
 import static org.hamcrest.Matchers.*;
 
@@ -36,7 +37,9 @@ public class UserServiceRestControllerTest {
 		User foundUser = new User();
 		String mockUsername = "a@a.com";
 		foundUser.setUsername(mockUsername);
-		given(userService.findUserByUsername(mockUsername)).willReturn(foundUser);
+		ServiceResult serviceResult = new ServiceResult();
+		serviceResult.setData(foundUser);
+		given(userService.findUserByUsername(mockUsername)).willReturn(serviceResult);
 		mvc.perform(
 				get("/userapi/getuser")
 				//.with(user("a@a.com").password("a"))
@@ -44,7 +47,7 @@ public class UserServiceRestControllerTest {
 				.contentType(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON))
 		.andExpect(status().isOk())
-		.andExpect(jsonPath("$.username", is("a@a.com")));
+		.andExpect(jsonPath("$.data.username", is("a@a.com")));
 	}
 	
 	@Test
@@ -70,7 +73,7 @@ public class UserServiceRestControllerTest {
 		mvc.perform(
 				post("/userapi/saveuser")
 				//.param("username", mockUsername)
-				.content("{ \"username\":" + mockUsername + ", \"password\": " + mockPassword + "}")
+				.content("{ \"username\":\"" + mockUsername + "\", \"password\":\"" + mockPassword + "\"}")
 				.contentType(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON))
 		.andExpect(status().isOk());

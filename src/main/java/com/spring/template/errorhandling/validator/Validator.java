@@ -24,7 +24,7 @@ public class Validator {
 	
 	public static ValidatorResult validate(User user) {
 		ValidatorResult result = new ValidatorResult(); 
-		if(userService.findUserByUsername(user.getUsername()) != null) {
+		if(userService.findUserByUsername(user.getUsername()).getData() != null) {
 			logger.warn("__WARN: UserValidator.validate(): User already exists!");
 			result.setValidationText("REGISTRATION ERROR: User " + user.getUsername() + " already exists!");
 			result.setValid(false);

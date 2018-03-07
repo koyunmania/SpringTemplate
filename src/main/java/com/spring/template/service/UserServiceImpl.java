@@ -10,6 +10,8 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.spring.template.errorhandling.validator.Validator;
+import com.spring.template.errorhandling.validator.ValidatorResult;
 import com.spring.template.model.Role;
 import com.spring.template.model.RoleName;
 import com.spring.template.model.User;
@@ -31,47 +33,104 @@ public class UserServiceImpl implements UserService {
     private BCryptPasswordEncoder bCryptPasswordEncoder;
     
     @Override
-	public User findUserByEmail(String email) {
-		User result = null; 
+	public ServiceResult findUserByEmail(String email) {
+    	ServiceResult result = new ServiceResult();
+    	User user = new User();
+    	String message = "";
+    	
 		try {
-			result =  userRepository.findByEmail(email);
+			user = userRepository.findByEmail(email);
+			message = "User (mail: " + email + ") could be found successfully in DB.";
+			result.setStatus(true);
+			logger.info(message);
 		} catch (DataAccessException e) {
-			logger.error("__ERROR: UserServiceImpl.findUserByEmail(String email): User (mail: " + email + ") can't be found in DB.", e);
+			message = "User (mail: " + email + ") can't be found in DB.";
+			result.setStatus(false);
+			logger.error("__ERROR: UserServiceImpl.findUserByEmail(String email): " + message, e);
 		}
+		result.setData(user);
+		result.setMessage(message);
 		return result;
 	}
 
 	@Override
-	public void saveUser(User user) {
-		user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-		user.setEnabled(true);
-		Role userRole = roleRepository.findByRole(RoleName.User.getRole());
-		user.setRoles(new HashSet<Role>(Arrays.asList(userRole)));
+	public ServiceResult saveUser(User user) {
+		ServiceResult result = new ServiceResult();
+		String message = "";
+		ValidatorResult validationResult = Validator.validate(user);
+		
+		if(!validationResult.isValid()) {
+			message = " User: " + user.getUsername() + " is already existing.";
+			logger.warn("__WARN: UserServiceImpl.saveUser(User user):" + message);
+			result.setMessage(message);
+			return result;
+		} else {
+			user.setEmail(user.getUsername());
+			user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+			user.setEnabled(true);
+			Role userRole = roleRepository.findByRole(RoleName.User.getRole());
+			user.setRoles(new HashSet<Role>(Arrays.asList(userRole)));
+		} 
 		try {
 			userRepository.save(user);
+			result.setStatus(true);
+			message = " User: " + user.getUsername() + " saved successfully.";
+			logger.info(message);
 		} catch (Exception e) {
-			logger.error("__ERROR: UserServiceImpl.saveUser(User user): User (user: " + user.toString() + ") can't be saved.", e);
+			message = "User: " + user.getUsername() + " can't be saved.";
+			result.setStatus(false);
+			logger.error("__ERROR: UserServiceImpl.saveUser(User user): " + message, e);
 		}
+		result.setMessage(message);
+		return result;
 	}
 
 	@Override
-	public void deleteUser(User user) {
-		try {
-			userRepository.delete(user);
-		} catch (DataAccessException e) {
-			logger.error("__ERROR: UserServiceImpl.deleteUser(User user): User (user: " + user.toString() + ") can't be deleted.\"", e);
+	public ServiceResult deleteUser(User user) {
+		ServiceResult result = new ServiceResult();
+		String message = "";
+		ValidatorResult validationResult = Validator.validate(user);
+
+		if(validationResult.isValid()) {
+			try {
+				userRepository.delete(user);
+				result.setStatus(true);
+				message = " User: " + user.getUsername() + " deleted successfully.";
+				logger.info("UserServiceImpl.deleteUser(User user): " + message);
+			} catch (DataAccessException e) {
+				result.setStatus(false);
+				message = "User: " + user.getUsername() + " can't be deleted.";
+				logger.error("UserServiceImpl.deleteUser(User user): " + message, e);
+			}
+		} else {
+			result.setStatus(false);
+			message = " User: " + user.getUsername() + " could not be found.";
+			logger.error("UserServiceImpl.deleteUser(User user): " + message);
 		}
-	}
-	
-	@Override
-	public User findUserByUsername(String username) {
-		User result = null;
-		try {
-			result = userRepository.findByUsername(username);
-		} catch (Exception e) {
-			logger.error("__ERROR: UserServiceImpl.findByUsername(String username): User (username: " + username + ") can't be saved.\"", e);
-		}
+		
+		result.setMessage(message);
 		return result;
 	}
 	
+	@Override
+	public ServiceResult findUserByUsername(String username) {
+		ServiceResult result = new ServiceResult();
+		String message = "";
+
+		User user = new User();
+		try {
+			user = userRepository.findByUsername(username);
+			result.setStatus(true);
+			result.setData(user);
+			message = "Username: " + username + " found successfully.";
+			logger.info("UserServiceImpl.findByUsername(String username): " + message);
+		} catch (Exception e) {
+			result.setStatus(false);
+			message = "Username: " + username + " can't be saved.";
+			logger.error("__ERROR: UserServiceImpl.findByUsername(String username): " + message, e);
+		}
+		
+		result.setMessage(message);
+		return result;
+	}
 }
