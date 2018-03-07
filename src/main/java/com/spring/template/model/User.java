@@ -13,6 +13,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -38,7 +39,7 @@ public class User {
 	
 	@NotEmpty(message = "Password can not be empty!")
 	@Column(name = "password")
-	@Length(min = 2)
+	@Size(min=2)
 	private String password;
 	
 	@Column(name = "enabled")

@@ -3,16 +3,19 @@ package com.spring.template.controller;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.spring.template.errorhandling.exceptions.UserNotValidException;
 import com.spring.template.model.Role;
 import com.spring.template.model.RoleName;
 import com.spring.template.model.User;
@@ -36,16 +39,13 @@ public class RegisterController {
 	}
 	
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
-	public ModelAndView register(@Valid User user, BindingResult result) throws ConstraintViolationException {
+	public ModelAndView register(@Valid User user, BindingResult result) throws UserNotValidException {
 		ModelAndView modelAndView = new ModelAndView();
 
 		if(result.hasFieldErrors("username")) {
-			modelAndView.addObject("message", "Username not valid!");
-			modelAndView.addObject("registerable", false);
+			throw new UserNotValidException("Username not valid", "register");
 		} else if(result.hasFieldErrors("password")) { 
-			modelAndView.addObject("message", "Password not valid!");
-			modelAndView.addObject("registerable", false);
-
+			throw new UserNotValidException("Password not valid", "register");
 		} else {
 			user.setEmail(user.getUsername());
 			RoleName roleUser = RoleName.User;
@@ -53,6 +53,7 @@ public class RegisterController {
 			roles.add(roleService.findRoleByName(roleUser));
 			user.setRoles(roles);
 			ServiceResult serviceResult = userService.saveUser(user); 
+			
 			if(serviceResult.isStatus()) {
 				modelAndView.addObject("message", serviceResult.getMessage());
 				modelAndView.addObject("registerable", true);
@@ -64,4 +65,14 @@ public class RegisterController {
 		}
 		return modelAndView; 
 	}
+	
+	@ExceptionHandler(UserNotValidException.class)
+	public ModelAndView handleError(HttpServletRequest req, UserNotValidException ex) {
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.setViewName(ex.getViewName());
+		modelAndView.addObject("message", ex.getErrorMessage());
+		modelAndView.addObject("registerable", false);
+		return modelAndView;
+	}
+	
 }
