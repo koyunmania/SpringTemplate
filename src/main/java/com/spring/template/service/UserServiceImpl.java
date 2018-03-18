@@ -57,9 +57,9 @@ public class UserServiceImpl implements UserService {
 	public ServiceResult saveUser(User user) {
 		ServiceResult result = new ServiceResult();
 		String message = "";
-		ValidatorResult validationResult = Validator.validate(user);
+		User foundUser = Validator.validateUserExistance(user); 
 		
-		if(!validationResult.isValid()) {
+		if( foundUser != null ) {
 			message = " User: " + user.getUsername() + " is already existing.";
 			logger.warn("__WARN: UserServiceImpl.saveUser(User user):" + message);
 			result.setMessage(message);
@@ -89,11 +89,14 @@ public class UserServiceImpl implements UserService {
 	public ServiceResult deleteUser(User user) {
 		ServiceResult result = new ServiceResult();
 		String message = "";
-		ValidatorResult validationResult = Validator.validate(user);
-
-		if(validationResult.isValid()) {
+		User foundUser = Validator.validateUserExistance(user);
+		if( foundUser == null ) {
+			result.setStatus(false);
+			message = " User: " + user.getUsername() + " could not be found.";
+			logger.error("UserServiceImpl.deleteUser(User user): " + message);
+		} else {
 			try {
-				userRepository.delete(user);
+				userRepository.delete(foundUser);
 				result.setStatus(true);
 				message = " User: " + user.getUsername() + " deleted successfully.";
 				logger.info("UserServiceImpl.deleteUser(User user): " + message);
@@ -102,10 +105,6 @@ public class UserServiceImpl implements UserService {
 				message = "User: " + user.getUsername() + " can't be deleted.";
 				logger.error("UserServiceImpl.deleteUser(User user): " + message, e);
 			}
-		} else {
-			result.setStatus(false);
-			message = " User: " + user.getUsername() + " could not be found.";
-			logger.error("UserServiceImpl.deleteUser(User user): " + message);
 		}
 		
 		result.setMessage(message);

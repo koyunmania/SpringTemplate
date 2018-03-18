@@ -5,4 +5,5 @@ import com.spring.template.model.RoleName;
 
 public interface RoleService {
 	public Role findRoleByName(RoleName roleName);
+	public void saveRole(Role role);
 }

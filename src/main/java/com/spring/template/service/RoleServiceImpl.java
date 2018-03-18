@@ -28,4 +28,13 @@ public class RoleServiceImpl implements RoleService {
 		return result;
 	}
 
+	@Override
+	public void saveRole(Role role) {
+		try {
+			roleRepository.save(role);
+		} catch (Exception e) {
+			logger.error("__ERROR: RoleServiceImpl.saveRole(Role role): ", e);
+		}
+	}
+
 }
