@@ -17,7 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.spring.template.errorhandling.exceptions.UserNotValidException;
 import com.spring.template.model.Role;
-import com.spring.template.model.RoleName;
+import com.spring.template.model.Roles;
 import com.spring.template.model.User;
 import com.spring.template.service.RoleService;
 import com.spring.template.service.ServiceResult;
@@ -48,9 +48,9 @@ public class RegisterController {
 			throw new UserNotValidException("Password not valid", "register");
 		} else {
 			user.setEmail(user.getUsername());
-			RoleName roleUser = RoleName.User;
+			Roles roleUser = Roles.User;
 			Set<Role> roles= new HashSet<Role>();
-			roles.add(roleService.findRoleByName(roleUser));
+			roles.add(roleService.findRoleByRole(roleUser));
 			user.setRoles(roles);
 			ServiceResult serviceResult = userService.saveUser(user); 
 			

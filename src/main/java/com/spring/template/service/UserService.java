@@ -7,5 +7,4 @@ public interface UserService {
 	public ServiceResult findUserByUsername(String username);
 	public ServiceResult saveUser(User user);
 	public ServiceResult deleteUser(User user);
-	
 }

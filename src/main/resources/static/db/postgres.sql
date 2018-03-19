@@ -8,8 +8,8 @@ CREATE TABLE user_profile
   email character varying(30),
   CONSTRAINT user_profile_pkey PRIMARY KEY (user_id)
 );
-INSERT INTO user_profile(username,password,enabled,email) VALUES ('jack','jack', true,'j@j.com');
-INSERT INTO user_profile(username,password,enabled,email) VALUES ('peter','peter', true,'p@p.com');
+INSERT INTO user_profile(username,password,enabled,email) VALUES ('a@a.com','123', true,'a@a.com');
+INSERT INTO user_profile(username,password,enabled,email) VALUES ('b@b.com','123', true,'b@b.com');
 
 
 DROP TABLE IF EXISTS role;

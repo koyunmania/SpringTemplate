@@ -1,9 +1,9 @@
 package com.spring.template.service;
 
 import com.spring.template.model.Role;
-import com.spring.template.model.RoleName;
+import com.spring.template.model.Roles;
 
 public interface RoleService {
-	public Role findRoleByName(RoleName roleName);
+	public Role findRoleByRole(Roles roleName);
 	public void saveRole(Role role);
 }

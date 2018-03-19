@@ -22,7 +22,6 @@ public class UserServiceRestController {
 	
 	@RequestMapping(value = "/userapi/deleteuser", 
 			method = RequestMethod.DELETE,
-			consumes = "application/json",
 			produces = "application/json")
 	@ResponseBody
 	@Transactional
@@ -35,7 +34,6 @@ public class UserServiceRestController {
 
 	@RequestMapping(value = "/userapi/getuser", 
 			method = RequestMethod.GET,
-			consumes = "application/json",
 			produces = "application/json")
 	@ResponseBody
 	public ServiceResult getUser(@RequestParam(value = "username") String username) {
@@ -53,4 +51,5 @@ public class UserServiceRestController {
 		ServiceResult serviceResult = userService.saveUser(user);
 		return serviceResult;
 	}
+
 }
