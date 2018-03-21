@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import com.spring.template.errorhandling.validator.Validator;
 import com.spring.template.errorhandling.validator.ValidatorResult;
 import com.spring.template.model.Role;
-import com.spring.template.model.Roles;
+import com.spring.template.model.RoleList;
 import com.spring.template.model.User;
 import com.spring.template.repository.RoleRepository;
 import com.spring.template.repository.UserRepository;
@@ -68,7 +68,7 @@ public class UserServiceImpl implements UserService {
 			user.setEmail(user.getUsername());
 			user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
 			user.setEnabled(true);
-			Role userRole = roleRepository.findByRole(Roles.User.getName());
+			Role userRole = roleRepository.findByRole(RoleList.User.getName());
 			user.setRoles(new HashSet<Role>(Arrays.asList(userRole)));
 		} 
 		try {

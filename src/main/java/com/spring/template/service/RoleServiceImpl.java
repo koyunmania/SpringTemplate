@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.spring.template.model.Role;
-import com.spring.template.model.Roles;
+import com.spring.template.model.RoleList;
 import com.spring.template.repository.RoleRepository;
 
 @Service("roleService")
@@ -18,7 +18,7 @@ public class RoleServiceImpl implements RoleService {
 	RoleRepository roleRepository;
 
 	@Override
-	public Role findRoleByRole(Roles roleName) {
+	public Role findRoleByRole(RoleList roleName) {
 		Role result = null;
 		try {
 			result = roleRepository.findByRole(roleName.getName());
