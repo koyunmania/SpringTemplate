@@ -40,7 +40,7 @@ public class FileUploadIntegrationTests {
 
 		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
 		map.add("file", resource);
-		ResponseEntity<String> response = this.restTemplate.postForEntity("/", map,
+		ResponseEntity<String> response = this.restTemplate.postForEntity("/fileupload", map,
 				String.class);
 
 		assertThat(response.getStatusCode()).isEqualByComparingTo(HttpStatus.FOUND);
@@ -55,7 +55,7 @@ public class FileUploadIntegrationTests {
 		given(this.storageService.loadAsResource("testupload.txt")).willReturn(resource);
 
 		ResponseEntity<String> response = this.restTemplate
-				.getForEntity("/files/{filename}", String.class, "testupload.txt");
+				.getForEntity("/fileupload/files/{filename}", String.class, "testupload.txt");
 
 		assertThat(response.getStatusCodeValue()).isEqualTo(200);
 		assertThat(response.getHeaders().getFirst(HttpHeaders.CONTENT_DISPOSITION))
