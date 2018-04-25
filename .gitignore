@@ -1,3 +1,4 @@
 target/
 src/main/resources/static/db/local_data/
 logs/
+upload-dir/

@@ -11,7 +11,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.spring.template.errorhandling.validator.Validator;
-import com.spring.template.errorhandling.validator.ValidatorResult;
 import com.spring.template.model.Role;
 import com.spring.template.model.RoleList;
 import com.spring.template.model.User;
