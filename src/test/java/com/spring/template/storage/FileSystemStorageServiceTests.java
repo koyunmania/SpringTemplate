@@ -24,7 +24,7 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 
 import com.spring.template.errorhandling.exceptions.StorageException;
-import com.spring.template.service.FileSystemStorageService;
+import com.spring.template.service.StorageServiceImpl;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -35,12 +35,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class FileSystemStorageServiceTests {
 
     private StorageProperties properties = new StorageProperties();
-    private FileSystemStorageService service;
+    private StorageServiceImpl service;
 
     @Before
     public void init() {
         properties.setLocation("target/files/" + Math.abs(new Random().nextLong()));
-        service = new FileSystemStorageService(properties);
+        service = new StorageServiceImpl(properties);
         service.init();
     }
 

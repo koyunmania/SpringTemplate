@@ -5,8 +5,8 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import com.spring.template.service.StorageService;
 import com.spring.template.storage.StorageProperties;
-import com.spring.template.storage.StorageService;
 
 @Configuration
 @EnableConfigurationProperties(StorageProperties.class)
