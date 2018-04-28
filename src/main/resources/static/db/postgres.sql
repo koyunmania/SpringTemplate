@@ -21,6 +21,7 @@ CREATE TABLE role
 );
 INSERT INTO role (role) VALUES ('ROLE_USER');
 INSERT INTO role (role) VALUES ('ROLE_ADMIN');
+INSERT INTO role (role) VALUES ('ROLE_APIUSER');
 
 
 DROP TABLE IF EXISTS user_role;
@@ -38,4 +39,5 @@ CREATE TABLE user_role
 );
 INSERT INTO user_role (user_id, role_id) VALUES (1, 1);
 INSERT INTO user_role (user_id, role_id) VALUES (1, 2);
+INSERT INTO user_role (user_id, role_id) VALUES (1, 3);
 INSERT INTO user_role (user_id, role_id) VALUES (2, 1);

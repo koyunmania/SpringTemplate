@@ -20,7 +20,7 @@ public class UserServiceRestController {
 	@Autowired
 	private UserService userService;
 	
-	@RequestMapping(value = "/userapi/deleteuser", 
+	@RequestMapping(value = "/api/user/deleteuser", 
 			method = RequestMethod.DELETE,
 			produces = "application/json")
 	@ResponseBody
@@ -32,7 +32,7 @@ public class UserServiceRestController {
 		return serviceResult;
 	}
 
-	@RequestMapping(value = "/userapi/getuser", 
+	@RequestMapping(value = "/api/user/getuser", 
 			method = RequestMethod.GET,
 			produces = "application/json")
 	@ResponseBody
@@ -41,7 +41,7 @@ public class UserServiceRestController {
 		return serviceResult;
 	}
 	
-	@RequestMapping(value = "/userapi/saveuser", 
+	@RequestMapping(value = "/api/user/saveuser", 
 			method = RequestMethod.POST,
 			consumes = "application/json",
 			produces = "application/json")

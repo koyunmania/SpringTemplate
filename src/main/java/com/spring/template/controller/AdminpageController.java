@@ -9,7 +9,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class AdminpageController {
-	@RequestMapping(value="/admin", method = RequestMethod.GET)
+	@RequestMapping(value="/admin/home", method = RequestMethod.GET)
 	public ModelAndView adminpage(HttpServletRequest request) {
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setViewName("admin/home");
