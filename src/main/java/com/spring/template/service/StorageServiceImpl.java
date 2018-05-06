@@ -21,7 +21,7 @@ import com.spring.template.errorhandling.exceptions.StorageException;
 import com.spring.template.errorhandling.exceptions.StorageFileNotFoundException;
 import com.spring.template.storage.StorageProperties;
 
-@Service
+@Service("storageService")
 public class StorageServiceImpl implements StorageService {
 
     private final Path rootLocation;

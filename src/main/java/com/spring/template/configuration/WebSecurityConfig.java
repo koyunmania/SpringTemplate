@@ -61,7 +61,7 @@ public class WebSecurityConfig {
 	    protected void configure(HttpSecurity http) throws Exception {
 	        http.antMatcher("/api/*")
             .authorizeRequests()
-                .antMatchers("/api/authuser").permitAll()
+                .antMatchers("/api/authuser", "/api/register").permitAll()
                 .antMatchers("/api/*").hasAuthority(RoleList.ApiUser.getName())
                 .anyRequest().authenticated()
                 .and()

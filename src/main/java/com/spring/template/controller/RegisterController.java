@@ -38,6 +38,16 @@ public class RegisterController {
 		return modelAndView; 
 	}
 	
+	public ServiceResult register(User user) {
+		user.setEmail(user.getUsername());
+		RoleList roleUser = RoleList.User;
+		Set<Role> roles= new HashSet<Role>();
+		roles.add(roleService.findRoleByRole(roleUser));
+		user.setRoles(roles);
+		ServiceResult serviceResult = userService.saveUser(user); 
+		return serviceResult;
+	}
+	
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
 	public ModelAndView register(@Valid User user, BindingResult result) throws UserNotValidException {
 		ModelAndView modelAndView = new ModelAndView();
@@ -47,13 +57,7 @@ public class RegisterController {
 		} else if(result.hasFieldErrors("password")) { 
 			throw new UserNotValidException("Password not valid", "register");
 		} else {
-			user.setEmail(user.getUsername());
-			RoleList roleUser = RoleList.User;
-			Set<Role> roles= new HashSet<Role>();
-			roles.add(roleService.findRoleByRole(roleUser));
-			user.setRoles(roles);
-			ServiceResult serviceResult = userService.saveUser(user); 
-			
+			ServiceResult serviceResult = register(user); 
 			if(serviceResult.isStatus()) {
 				modelAndView.addObject("message", serviceResult.getMessage());
 				modelAndView.addObject("registerable", true);

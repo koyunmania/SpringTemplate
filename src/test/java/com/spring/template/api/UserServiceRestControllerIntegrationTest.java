@@ -55,7 +55,7 @@ public class UserServiceRestControllerIntegrationTest {
 
 			try {
 				mockMvc.perform(
-						get("/userapi/getuser")
+						get("/api/user/getuser")
 						.param("username", mockUsername)
 						.contentType(contentType)
 						.accept(MediaType.APPLICATION_JSON))
@@ -73,7 +73,7 @@ public class UserServiceRestControllerIntegrationTest {
 
 			try {
 				mockMvc.perform(
-						get("/userapi/getuser")
+						get("/api/user/getuser")
 						.param("username", mockUsername)
 						.contentType(contentType)
 						.accept(MediaType.APPLICATION_JSON))
@@ -90,7 +90,7 @@ public class UserServiceRestControllerIntegrationTest {
 		String mockUsername = "a@b.com";
 		try {
 			mockMvc.perform(
-					delete("/userapi/deleteuser")
+					delete("/api/user/deleteuser")
 					.param("username", mockUsername)
 					.contentType(contentType)
 					.accept(MediaType.APPLICATION_JSON))
@@ -109,7 +109,7 @@ public class UserServiceRestControllerIntegrationTest {
 		try {
 			// Save mock user
 			mockMvc.perform(
-					post("/userapi/saveuser")
+					post("/api/user/saveuser")
 					.contentType(contentType)
 					.accept(MediaType.APPLICATION_JSON)
 					.content("{\"username\":\"" + mockUsername  + "\",\"password\":\"123\"}")
@@ -119,7 +119,7 @@ public class UserServiceRestControllerIntegrationTest {
 			
 			// Test if saved
 			mockMvc.perform(
-					get("/userapi/getuser")
+					get("/api/user/getuser")
 					.param("username", mockUsername)
 					.contentType(contentType)
 					.accept(MediaType.APPLICATION_JSON))
@@ -128,7 +128,7 @@ public class UserServiceRestControllerIntegrationTest {
 			
 			// Delete saved user
 			mockMvc.perform(
-					delete("/userapi/deleteuser")
+					delete("/api/user/deleteuser")
 					.param("username", mockUsername)
 					.contentType(contentType)
 					.accept(MediaType.APPLICATION_JSON))
@@ -137,7 +137,7 @@ public class UserServiceRestControllerIntegrationTest {
 			
 			// Test if deleted
 			mockMvc.perform(
-					delete("/userapi/deleteuser")
+					delete("/api/user/deleteuser")
 					.param("username", mockUsername)
 					.contentType(contentType)
 					.accept(MediaType.APPLICATION_JSON))
