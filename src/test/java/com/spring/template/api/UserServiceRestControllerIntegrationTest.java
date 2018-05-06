@@ -1,6 +1,7 @@
 package com.spring.template.api;
 
 import static org.hamcrest.Matchers.is;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -13,7 +14,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
@@ -29,7 +29,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)
-@WithMockUser(username = "a@a.com", roles="USER")
 @WebAppConfiguration
 @TestPropertySource(locations = "classpath:application-integrationtest.properties")
 public class UserServiceRestControllerIntegrationTest {
@@ -56,6 +55,7 @@ public class UserServiceRestControllerIntegrationTest {
 			try {
 				mockMvc.perform(
 						get("/api/user/getuser")
+						.with(user("a@a.com").password("123"))
 						.param("username", mockUsername)
 						.contentType(contentType)
 						.accept(MediaType.APPLICATION_JSON))
@@ -74,6 +74,7 @@ public class UserServiceRestControllerIntegrationTest {
 			try {
 				mockMvc.perform(
 						get("/api/user/getuser")
+						.with(user("a@a.com").password("123"))
 						.param("username", mockUsername)
 						.contentType(contentType)
 						.accept(MediaType.APPLICATION_JSON))
@@ -91,6 +92,7 @@ public class UserServiceRestControllerIntegrationTest {
 		try {
 			mockMvc.perform(
 					delete("/api/user/deleteuser")
+					.with(user("a@a.com").password("123"))
 					.param("username", mockUsername)
 					.contentType(contentType)
 					.accept(MediaType.APPLICATION_JSON))
@@ -110,6 +112,7 @@ public class UserServiceRestControllerIntegrationTest {
 			// Save mock user
 			mockMvc.perform(
 					post("/api/user/saveuser")
+					.with(user("a@a.com").password("123"))
 					.contentType(contentType)
 					.accept(MediaType.APPLICATION_JSON)
 					.content("{\"username\":\"" + mockUsername  + "\",\"password\":\"123\"}")
@@ -120,6 +123,7 @@ public class UserServiceRestControllerIntegrationTest {
 			// Test if saved
 			mockMvc.perform(
 					get("/api/user/getuser")
+					.with(user("a@a.com").password("123"))
 					.param("username", mockUsername)
 					.contentType(contentType)
 					.accept(MediaType.APPLICATION_JSON))
@@ -129,6 +133,7 @@ public class UserServiceRestControllerIntegrationTest {
 			// Delete saved user
 			mockMvc.perform(
 					delete("/api/user/deleteuser")
+					.with(user("a@a.com").password("123"))
 					.param("username", mockUsername)
 					.contentType(contentType)
 					.accept(MediaType.APPLICATION_JSON))
@@ -138,6 +143,7 @@ public class UserServiceRestControllerIntegrationTest {
 			// Test if deleted
 			mockMvc.perform(
 					delete("/api/user/deleteuser")
+					.with(user("a@a.com").password("123"))
 					.param("username", mockUsername)
 					.contentType(contentType)
 					.accept(MediaType.APPLICATION_JSON))
