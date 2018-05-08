@@ -34,129 +34,91 @@ import org.springframework.test.context.junit4.SpringRunner;
 public class UserServiceRestControllerIntegrationTest {
 
 	private MockMvc mockMvc;
-	
+
 	private MediaType contentType = new MediaType(MediaType.APPLICATION_JSON.getType(),
-            MediaType.APPLICATION_JSON.getSubtype(),
-            Charset.forName("utf8"));
-	
+			MediaType.APPLICATION_JSON.getSubtype(), Charset.forName("utf8"));
+
 	@Autowired
-    private WebApplicationContext webApplicationContext;
+	private WebApplicationContext webApplicationContext;
 
-    @Before
-    public void setup() throws Exception {
-        this.mockMvc = webAppContextSetup(webApplicationContext).build();
-		
-    }
-    
-    @Test
+	@Before
+	public void setup() throws Exception {
+		this.mockMvc = webAppContextSetup(webApplicationContext).build();
+	}
+
+	@Test
 	public void testGetExistingUser() {
-    	String mockUsername = "a@a.com";
-
-			try {
-				mockMvc.perform(
-						get("/api/user/getuser")
-						.with(user("a@a.com").password("123"))
-						.param("username", mockUsername)
-						.contentType(contentType)
-						.accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.data.username", is(mockUsername)));
-				} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+		String mockUsername = "a@a.com";
+		try {
+			mockMvc.perform(get("/api/user/getuser").with(user("a@a.com").password("123"))
+					.param("username", mockUsername).contentType(contentType).accept(MediaType.APPLICATION_JSON))
+					.andExpect(status().isOk()).andExpect(jsonPath("$.data.username", is(mockUsername)));
+		} catch (Exception e) {
+			System.out.println("Failes:" + e.getMessage());
+		}
 	}
-    
-    @Test
-	public void testGetNotUser() {
-    	String mockUsername = "a@b.com";
 
-			try {
-				mockMvc.perform(
-						get("/api/user/getuser")
-						.with(user("a@a.com").password("123"))
-						.param("username", mockUsername)
-						.contentType(contentType)
-						.accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.data").doesNotExist());
-				} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+	@Test
+	public void testGetNotExistingUser() {
+		String mockUsername = "y@z.com";
+
+		try {
+			mockMvc.perform(get("/api/user/getuser").with(user("a@a.com").password("123"))
+					.param("username", mockUsername).contentType(contentType).accept(MediaType.APPLICATION_JSON))
+					.andExpect(status().isOk()).andExpect(jsonPath("$.data").doesNotExist());
+		} catch (Exception e) {
+			System.out.println("Failes:" + e.getMessage());
+		}
 	}
-    
+
 	@Test
 	public void testDeleteNotExistingUser() {
-		String mockUsername = "a@b.com";
+		String mockUsername = "y@z.com";
 		try {
-			mockMvc.perform(
-					delete("/api/user/deleteuser")
-					.with(user("a@a.com").password("123"))
-					.param("username", mockUsername)
-					.contentType(contentType)
-					.accept(MediaType.APPLICATION_JSON))
-			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.status", is(false)));
+			mockMvc.perform(delete("/api/user/deleteuser").with(user("a@a.com").password("123"))
+					.param("username", mockUsername).contentType(contentType).accept(MediaType.APPLICATION_JSON))
+					.andExpect(status().isOk()).andExpect(jsonPath("$.status", is(false)));
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("Failes:" + e.getMessage());
 		}
 	}
 
 	@Test
-	public void testDeleteExistingUser() {
-		String mockUsername = "z@z.com";
-		
+	public void testSaveUser() {
+		String mockUsername = "a@b.com";
 		try {
 			// Save mock user
-			mockMvc.perform(
-					post("/api/user/saveuser")
-					.with(user("a@a.com").password("123"))
-					.contentType(contentType)
+			mockMvc.perform(post("/api/user/saveuser").with(user("a@a.com").password("123")).contentType(contentType)
 					.accept(MediaType.APPLICATION_JSON)
-					.content("{\"username\":\"" + mockUsername  + "\",\"password\":\"123\"}")
-					)
-			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.status", is(true)));
-			
+					.content("{\"username\":\"" + mockUsername + "\",\"password\":\"123\"}")).andExpect(status().isOk())
+					.andExpect(jsonPath("$.status", is(true)));
 			// Test if saved
-			mockMvc.perform(
-					get("/api/user/getuser")
-					.with(user("a@a.com").password("123"))
-					.param("username", mockUsername)
-					.contentType(contentType)
-					.accept(MediaType.APPLICATION_JSON))
-			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.data.username", is(mockUsername)));
-			
-			// Delete saved user
-			mockMvc.perform(
-					delete("/api/user/deleteuser")
-					.with(user("a@a.com").password("123"))
-					.param("username", mockUsername)
-					.contentType(contentType)
-					.accept(MediaType.APPLICATION_JSON))
-			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.status", is(true)));
-			
-			// Test if deleted
-			mockMvc.perform(
-					delete("/api/user/deleteuser")
-					.with(user("a@a.com").password("123"))
-					.param("username", mockUsername)
-					.contentType(contentType)
-					.accept(MediaType.APPLICATION_JSON))
-			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.status", is(false)));
+			mockMvc.perform(get("/api/user/getuser").with(user("a@a.com").password("123"))
+					.param("username", mockUsername).contentType(contentType).accept(MediaType.APPLICATION_JSON))
+					.andExpect(status().isOk()).andExpect(jsonPath("$.data.username", is(mockUsername)));
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("Failes:" + e.getMessage());
+		}
+
+	}
+
+	@Test
+	
+	public void testDeleteExistingUser() {
+		String mockUsername = "a@b.com";
+
+		try {
+			// Delete saved user
+			mockMvc.perform(delete("/api/user/deleteuser").with(user("a@a.com").password("123"))
+					.param("username", mockUsername).contentType(contentType).accept(MediaType.APPLICATION_JSON))
+					.andExpect(status().isOk()).andExpect(jsonPath("$.status", is(true)));
+
+			// Test if deleted
+			mockMvc.perform(delete("/api/user/deleteuser").with(user("a@a.com").password("123"))
+					.param("username", mockUsername).contentType(contentType).accept(MediaType.APPLICATION_JSON))
+					.andExpect(status().isOk()).andExpect(jsonPath("$.status", is(false)));
+		} catch (Exception e) {
+			System.out.println("Failes:" + e.getMessage());
 		}
 	}
-	/*@Test
-	public void testSaveUser() {
-		fail("Not yet implemented");
-	}*/
-
 }
