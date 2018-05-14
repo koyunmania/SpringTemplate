@@ -40,7 +40,7 @@ public class FileUploadController {
                 )
                 .collect(Collectors.toList()));
 
-        return "fileupload";
+                return "fileupload";
 	}
 
     @GetMapping("/fileupload/files/{filename:.+}")

@@ -28,7 +28,7 @@ public class ApplicationTests {
     public void loginWithValidUserThenAuthenticated() throws Exception {
         FormLoginRequestBuilder login = formLogin()
             .user("a@a.com")
-            .password("a");
+            .password("123");
 
         mockMvc.perform(login)
             .andExpect(authenticated().withUsername("a@a.com"));
@@ -58,9 +58,22 @@ public class ApplicationTests {
     }
 
     @Test
-    @WithMockUser
+    @WithMockUser(username = "a@a.com", roles="USER")
     public void accessSecuredResourceAuthenticatedThenOk() throws Exception {
         mockMvc.perform(get("/hello"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(username = "a@a.com", roles="USER")
+    public void accessSecuredResourceUserAuthenticatedThenNOk() throws Exception {
+        mockMvc.perform(get("/admin/home"))
+                .andExpect(status().isForbidden());
+    }
+    @Test
+    @WithMockUser(username = "a@a.com", roles="ADMIN")
+    public void accessSecuredResourceAdminAuthenticatedThenOk() throws Exception {
+        mockMvc.perform(get("/admin/home"))
                 .andExpect(status().isOk());
     }
 }
