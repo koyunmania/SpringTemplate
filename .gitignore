@@ -1,4 +1,5 @@
 target/
 src/main/resources/static/db/local_data/
-logs/
+logs/application.log
 upload-dir/
+logs/
