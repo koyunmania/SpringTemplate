@@ -31,12 +31,6 @@ public class RegisterController {
 	@Autowired
 	private RoleService roleService; 
 	
-	@RequestMapping(value = "/register", method = RequestMethod.GET)
-	public ModelAndView register() {
-		ModelAndView modelAndView = new ModelAndView();
-		return modelAndView; 
-	}
-	
 	public ServiceResult register(User user) {
 		user.setEmail(user.getUsername());
 		RoleList roleUser = RoleList.User;
@@ -45,6 +39,12 @@ public class RegisterController {
 		user.setRoles(roles);
 		ServiceResult serviceResult = userService.saveUser(user); 
 		return serviceResult;
+	}
+	
+	@RequestMapping(value = "/register", method = RequestMethod.GET)
+	public ModelAndView register() {
+		ModelAndView modelAndView = new ModelAndView();
+		return modelAndView; 
 	}
 	
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
