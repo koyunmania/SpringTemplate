@@ -14,7 +14,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -29,8 +29,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)
-@WebAppConfiguration
 @TestPropertySource(locations = "classpath:application-integrationtest.properties")
+@WithMockUser(username = "a@a.com", roles="USER")
 public class UserServiceRestControllerIntegrationTest {
 
 	private MockMvc mockMvc;
@@ -50,7 +50,7 @@ public class UserServiceRestControllerIntegrationTest {
 	public void testGetExistingUser() {
 		String mockUsername = "a@a.com";
 		try {
-			mockMvc.perform(get("/api/user/getuser").with(user("a@a.com").password("123"))
+			mockMvc.perform(get("/api/user/getuser")
 					.param("username", mockUsername).contentType(contentType).accept(MediaType.APPLICATION_JSON))
 					.andExpect(status().isOk()).andExpect(jsonPath("$.data.username", is(mockUsername)));
 		} catch (Exception e) {
@@ -63,7 +63,7 @@ public class UserServiceRestControllerIntegrationTest {
 		String mockUsername = "y@z.com";
 
 		try {
-			mockMvc.perform(get("/api/user/getuser").with(user("a@a.com").password("123"))
+			mockMvc.perform(get("/api/user/getuser")
 					.param("username", mockUsername).contentType(contentType).accept(MediaType.APPLICATION_JSON))
 					.andExpect(status().isOk()).andExpect(jsonPath("$.data").doesNotExist());
 		} catch (Exception e) {
@@ -75,7 +75,7 @@ public class UserServiceRestControllerIntegrationTest {
 	public void testDeleteNotExistingUser() {
 		String mockUsername = "y@z.com";
 		try {
-			mockMvc.perform(delete("/api/user/deleteuser").with(user("a@a.com").password("123"))
+			mockMvc.perform(delete("/api/user/deleteuser")
 					.param("username", mockUsername).contentType(contentType).accept(MediaType.APPLICATION_JSON))
 					.andExpect(status().isOk()).andExpect(jsonPath("$.status", is(false)));
 		} catch (Exception e) {
@@ -88,12 +88,12 @@ public class UserServiceRestControllerIntegrationTest {
 		String mockUsername = "a@b.com";
 		try {
 			// Save mock user
-			mockMvc.perform(post("/api/user/saveuser").with(user("a@a.com").password("123")).contentType(contentType)
+			mockMvc.perform(post("/api/user/saveuser").contentType(contentType)
 					.accept(MediaType.APPLICATION_JSON)
 					.content("{\"username\":\"" + mockUsername + "\",\"password\":\"123\"}")).andExpect(status().isOk())
 					.andExpect(jsonPath("$.status", is(true)));
 			// Test if saved
-			mockMvc.perform(get("/api/user/getuser").with(user("a@a.com").password("123"))
+			mockMvc.perform(get("/api/user/getuser")
 					.param("username", mockUsername).contentType(contentType).accept(MediaType.APPLICATION_JSON))
 					.andExpect(status().isOk()).andExpect(jsonPath("$.data.username", is(mockUsername)));
 		} catch (Exception e) {
@@ -109,12 +109,12 @@ public class UserServiceRestControllerIntegrationTest {
 
 		try {
 			// Delete saved user
-			mockMvc.perform(delete("/api/user/deleteuser").with(user("a@a.com").password("123"))
+			mockMvc.perform(delete("/api/user/deleteuser")
 					.param("username", mockUsername).contentType(contentType).accept(MediaType.APPLICATION_JSON))
 					.andExpect(status().isOk()).andExpect(jsonPath("$.status", is(true)));
 
 			// Test if deleted
-			mockMvc.perform(delete("/api/user/deleteuser").with(user("a@a.com").password("123"))
+			mockMvc.perform(delete("/api/user/deleteuser")
 					.param("username", mockUsername).contentType(contentType).accept(MediaType.APPLICATION_JSON))
 					.andExpect(status().isOk()).andExpect(jsonPath("$.status", is(false)));
 		} catch (Exception e) {

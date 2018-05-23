@@ -1,6 +1,5 @@
 package com.spring.template.api;
 
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -12,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -29,7 +29,7 @@ import static org.hamcrest.Matchers.*;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(UserServiceRestController.class)
-//@WithMockUser(username = "a@a.com", roles="USER")
+@WithMockUser(username = "a@a.com", roles="USER")
 public class UserServiceRestControllerTest {
 	
 	@Autowired
@@ -56,7 +56,6 @@ public class UserServiceRestControllerTest {
 		given(userService.findUserByUsername(mockUsername)).willReturn(serviceResult);
 		mvc.perform(
 				get("/api/user/getuser")
-				.with(user("a@a.com").password("a"))
 				.param("username", mockUsername)
 				.contentType(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON))
@@ -74,8 +73,6 @@ public class UserServiceRestControllerTest {
 		foundUser.setPassword(mockPassword);
 		mvc.perform(
 				post("/api/user/saveuser")
-				.with(user("a@a.com").password("123"))
-				//.param("username", mockUsername)
 				.content("{ \"username\":\"" + mockUsername + "\", \"password\":\"" + mockPassword + "\"}")
 				.contentType(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON))
