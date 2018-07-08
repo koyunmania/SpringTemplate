@@ -1,7 +1,7 @@
 target/*
 src/main/resources/static/db/local_data/
-upload-dir/*
-logs/*
+upload-dir/*.*
+logs/*.*
 gradle*
 mvn*
 build.gradle
