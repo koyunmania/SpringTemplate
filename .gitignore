@@ -1,5 +1,7 @@
 target/
 src/main/resources/static/db/local_data/
-logs/application.log
 upload-dir/
 logs/
+.sts4-cache
+.vscode
+.settings
