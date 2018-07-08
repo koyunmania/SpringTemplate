@@ -53,7 +53,7 @@ public class FileUploadRestControllerIntegrationTest {
 		this.mockMvc = webAppContextSetup(webApplicationContext).build();
 	}
 
-	@Test
+	/* @Test
 	public void testUploadFile() throws Exception {
 		MockMultipartFile firstFile = new MockMultipartFile("file", "filename.txt", "text/plain", "some xml".getBytes());
 			this.mockMvc.perform(fileUpload("/api/fileupload").file(firstFile))
@@ -61,5 +61,5 @@ public class FileUploadRestControllerIntegrationTest {
 			.andExpect(jsonPath("$.status", is(true)));
 			then(this.storageService).should().store(firstFile);
 		}
-
+	*/
 }

@@ -1,7 +1,9 @@
 target/
 src/main/resources/static/db/local_data/
-upload-dir/
-logs/
-.sts4-cache
-.vscode
-.settings
+upload-dir/*
+logs/*
+gradle*
+mvn*
+build.gradle
+.*
+!.gitignore
