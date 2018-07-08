@@ -1,9 +1,13 @@
-target/
+target/*
 src/main/resources/static/db/local_data/
 upload-dir/*
 logs/*
 gradle*
 mvn*
 build.gradle
+.classpath
+.project
+.springBeans
+hardcopy.0
 .*
 !.gitignore
